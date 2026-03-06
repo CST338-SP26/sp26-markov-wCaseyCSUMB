@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class Markov {
     private static final String BEGINS_SENTENCE = "__$";
@@ -11,7 +12,7 @@ public class Markov {
     private static final String PUNCTUATION_MARKS = ".!?$";
 
     public Markov() {
-        words = new HashMap<>;
+        words = new HashMap<>();
         words.put(BEGINS_SENTENCE, new ArrayList<>());
         prevWord = BEGINS_SENTENCE;
     }
@@ -51,11 +52,28 @@ public class Markov {
     }
 
     public void addWord(String word) {
+        if (word == null || word.length() == 0) {
+            return;
+        }
+        //not sure if this is fully necessary, check back
+        if (endsWithPunctuation(prevWord)) {
+            words.get(BEGINS_SENTENCE).add(word);
+            prevWord = word;
+            return;
+        }
 
+        words.get(prevWord).add(word);
+        prevWord = word;
     }
 
     public String randomWord(String word) {
-
+        Random rand = new Random();
+        ArrayList<String> tempList = words.get(word);
+        if (tempList == null || tempList.isEmpty()) {
+            return null;
+        }
+        int index = rand.nextInt(tempList.size());
+        return tempList.get(index);
     }
 
     public String toString() {
