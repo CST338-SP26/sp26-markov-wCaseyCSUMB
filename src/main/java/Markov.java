@@ -17,7 +17,24 @@ public class Markov {
     }
 
     public String getSentence() {
+        String currentString = randomWord(BEGINS_SENTENCE);
 
+        StringBuilder sb = new StringBuilder();
+        while (true) {
+            sb.append(currentString);
+
+            if (endsWithPunctuation(currentString)) {
+                break;
+            }
+            sb.append(" ");
+            currentString = randomWord(currentString);
+
+            if (currentString == null) {
+                break;
+            }
+        }
+
+        return sb.toString();
     }
 
     public void addFromFile(String filename) {
@@ -42,7 +59,7 @@ public class Markov {
     }
 
     public String toString() {
-
+        return words.toString();
     }
 
     public HashMap<String, ArrayList<String>> getWords() {
@@ -59,8 +76,21 @@ public class Markov {
 
     }
 
-    public static boolean endsWithPunctuation(String input) {
-
+    public static boolean endsWithPunctuation(String word) {
+        try {
+            if (word == null || word.isEmpty()) {
+                return false;
+            }
+            char lastLetter = word.charAt(word.length() - 1);
+                if (PUNCTUATION_MARKS.indexOf(lastLetter) >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+        } catch (Exception e) {
+            System.out.println("endsWithPunctuation catch exception");
+            return false;
+        }
     }
 
 }
